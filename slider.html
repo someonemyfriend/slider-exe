@@ -1,0 +1,312 @@
+<div class="container">
+						<div class="row">
+							<!--/* ---------- Start Slider ---------- */-->
+							<div class="col-xs-12 col-sm-6.2">
+								<!--/* ----------  Big image  ---------- */-->
+								<div class="image-big-container tab-contented big-img" id="big-product-image" th:if="false">
+
+								<!--/*			
+									TODO:!!! make function for promo product !!!
+										<div class="label-promo" th:if="${product_data.promo}" th:unless="${product_data.bazar}">
+											<span>Промоция</span>
+										</div>  
+
+										order-2 image-placeholder
+									imageSizeX='210',
+									imageSizeY='210',
+								*/-->
+
+									<a th:href="@{'/tools-box-1200-1200-' + ${product_data.image_path} + '/' + ${product_data.image_real_name}}" class="img-responsive" rel="gallery">
+										<block th:with="itemName=${product_data.ime}, imagePath=${product_data.image_path}, imageRealName=${product_data.image_real_name}, imageSizeX='800', imageSizeY='800', itemClass='img-responsive', itemID='big-image', itemProp=@{'/tools-box-1200-1200-' + ${product_data.image_path} + '/' + ${product_data.image_real_name}}" th:include="/fragments/general/image_resize" th:remove="tag" />
+									</a>
+								</div>
+								
+								<!--/* Big image */-->
+								<div class="tab-content big-images" id="big-product-image">
+									<a th:href="@{'/tools-box-1200-1200-' + ${product_data.image_path} + '/' + ${product_data.image_real_name}}" class="fancybox" rel="gallery">
+										<block th:with="itemName=${product_data.ime}, imagePath=${product_data.image_path}, imageRealName=${product_data.image_real_name}, imageSizeX='800', imageSizeY='800', itemClass='img-responsive', itemID='big-image', itemProp=@{'/tools-box-1200-1200-' + ${product_data.image_path} + '/' + ${product_data.image_real_name}}" th:include="/fragments/general/image_resize" th:remove="tag" />
+									</a>
+								</div>
+								<!--/* ----------  Small images  ---------- */-->
+								<div th:if="${1 < #lists.size(product_data.images)} OR ${1 < #lists.size(product_data.colors)}">
+									<div th:if="${1 < #lists.size(product_data.images)}">
+										<div class="thumbnails-wrapper-container" id="small-thumbnails-move">
+											<a href="javascript:;" class="thumbs-nav _jSTfH-move-left"><i class="slider-arrow slider-arrow-left"></i></a>
+											<ul class="ul-slider" role="tablist" th:if="${#lists.size(product_data.images)}">
+												<li class="li-slides" th:each="rr,rStat : ${product_data.images}">
+													<a
+														th:href="@{'/tools-box-1200-1200-' + ${rr.image_path} + '/' + ${rr.image_real_name}}"
+														class="small-a"
+														rel="gallery" 
+														th:attr="data-image=@{'/tools-box-800-800-' + ${rr.image_path} + '/' + ${rr.image_real_name}}, data-zoom-image=@{'/tools-box-1200-1200-' + ${rr.image_path} + '/' + ${rr.image_real_name}}"
+													>
+														<th:block
+															th:with="
+																itemName=${product_data.ime},
+																imagePath=${rr.image_path},
+																imageRealName=${rr.image_real_name},
+
+																itemID='big-image',
+																itemProp='image'
+															"
+															th:include="/fragments/general/image_resize"
+															></th:block>
+													</a>
+												</li>
+											</ul>
+												<a href="javascript:;" class="thumbs-nav _jSTfH-move-right"><i class="slider-arrow slider-arrow-right"></i></a>
+										</div>
+									</div>
+									
+								</div>
+							</div>
+							
+							<!--/* ---------- End Slider ---------- */-->
+							
+							<div class="col-xs-12 col-sm-5.8 info order-1" style="padding-right:calc(15px + 20px);">
+							
+							
+							
+							
+							
+							
+							<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				const smallImages = document.querySelectorAll('.small-a img');
+
+					smallImages.forEach(function(smallImage) {
+						smallImage.addEventListener('mouseover', function() {
+							const bigImageUrl = this.parentElement.getAttribute('href');
+							$('img.img-responsive').prop('src', bigImageUrl);
+							$('a.img-responsive').prop('href', bigImageUrl);
+						});
+					});
+			});
+
+
+
+			function getScrolledVisibleLeftChild(par) {
+				var children = par.children;
+				var parentScroll = par.getBoundingClientRect().left;
+
+				//console.info('have to find: '+parentScroll)
+				return Array.prototype.find.call(children, child => { 
+
+					var childSizes = child.getBoundingClientRect();
+					// var minScroll = childSizes.left;
+					// var maxScroll = childSizes.left + childSizes.width;
+					var leftPos  = childSizes.left - parentScroll;
+					var rightPos = childSizes.left + childSizes.width - parentScroll;
+
+					// 3% margin of pixel error
+					leftPos  -= childSizes.width *.03;
+					rightPos -= childSizes.width *.03;
+					
+
+					//console.info(`for `,child,` minScroll:${minScroll}, maxScroll:${maxScroll}`);
+					// if (minScroll <= parentScroll && parentScroll < maxScroll) {
+					if (leftPos <= 0 && 0 < rightPos) {
+						//console.log("Visible child:", child);
+						return child;
+					}
+				});
+			}
+			
+			function getScrollChildVisibleRatio(child, par) {
+				par = par || child.parentElement;
+				var parentScroll = par.getBoundingClientRect().left;
+
+				var childSizes = child.getBoundingClientRect();
+				var leftPos  = childSizes.left - parentScroll;
+				//var rightPos = childSizes.left + childSizes.width - parentScroll;
+				var vhildVisiblePart = childSizes.width + leftPos; // assuming leftPos is in negative pixels and not more then the child width
+				var childVisibleRatio = vhildVisiblePart / childSizes.width;
+				
+				return childVisibleRatio;
+			}
+
+			document.addEventListener('DOMContentLoaded', function() {
+				var ulSlider = document.querySelector('.ul-slider');
+				function ulSlider_horizontalScrollOneChild(direction) {
+					var visibleLeftChild = getScrolledVisibleLeftChild(ulSlider);
+					
+					var scrollToChild;
+					if (direction === 'left') {
+						var childVisibleRatio = getScrollChildVisibleRatio(visibleLeftChild, ulSlider);
+						var childHiddenRatio = 1 - childVisibleRatio;
+
+
+						// if hidden part is more then 20% then just show same child (in context of scrolling to left by 1 - but we do not want to be more then 1.20)
+						if (.20 < childHiddenRatio) {
+							scrollToChild = visibleLeftChild;
+						} else {
+							scrollToChild = visibleLeftChild.previousElementSibling;
+						}
+
+					} else if (direction === 'right') {
+						scrollToChild = visibleLeftChild.nextElementSibling;
+					}
+
+					if (scrollToChild)
+					ulSlider.scrollTo({
+						top: 0,
+						left: scrollToChild.offsetLeft,
+						behavior: "smooth"
+					});
+
+					// return scrollToChild;
+				}
+
+				$('._jSTfH-move-left' ).on('click', e => ulSlider_horizontalScrollOneChild('left' ));
+				$('._jSTfH-move-right').on('click', e => ulSlider_horizontalScrollOneChild('right'));
+			});
+		</script>
+		
+		
+		<style>
+@media (min-width: 768px) {
+	.col-sm-6\.2 {width:calc( (6.2 / 12) * 100% )}
+	.col-sm-5\.8 {width:calc( (5.8 / 12) * 100% )}
+}
+		
+		
+@media (992px <= width) {
+	.bg-halfright-gray:has(.mobile-flex > .col-sm-5.8) {
+		background-size: calc( (5.8 / 12) * 100% );
+	}
+}
+
+.thumbnails-wrapper-container {
+  display: flex;
+  flex-direction: row;
+	position: relative;
+}
+
+		
+		.thumbnails-wrapper-container ul {
+  display: flex;
+	padding-bottom: 10px;
+	align-items: center;
+	overflow-x: auto;
+	width: calc(100%);
+	scroll-snap-type: x mandatory;
+	display: flex;
+	gap: 5px;
+	padding-top: 5px;
+}
+
+.thumbnails-wrapper-container ul li {
+  scroll-snap-align: start;
+}	
+
+.thumbnails-wrapper-container ul li:last-child {
+	scroll-snap-align: end;
+}
+
+#small-thumbnails-move ul li a img {
+	width: 140px !important;
+	height: auto !important;
+}
+
+.new-style-cal-up {
+  width: 110%;
+	margin-left: -35px;
+}
+
+.slider-arrow {
+  border: solid #C0C0C0;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 5px; 
+  border-radius: 1px;
+}
+
+.slider-arrow-right {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+.slider-arrow-left {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+}
+
+/*.bx-viewport.bx-viewport {
+   min-height: 20vh;
+}*/
+
+._jSTfH-move-left {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	left: -14px;
+}
+
+._jSTfH-move-right {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	right: -17px;
+}
+
+.bx-viewport ul li {
+	width: 150px !important;
+}
+
+
+.thumbnails-wrapper-container ul li:first-child {
+	padding-left: 0px;
+} 
+
+@media screen and (max-width: 1220px) {
+	#small-thumbnails-move ul li a img {
+			width: 120px !important;
+			height: auto !important;
+	}
+	.thumbnails-wrapper-container ul {
+		padding-bottom: 10px;
+		width: calc(92%);
+		margin: 0 auto;
+	}
+	._jSTfH-move-left {
+		left: 6px;
+	}   
+	._jSTfH-move-right {
+		right: 8px;
+	}
+}
+
+@media screen and (max-width: 991px) {
+		.thumbnails-wrapper-container ul {
+		width: calc(91%);
+	}
+	._jSTfH-move-left {
+		left: -11px;
+	}   
+	._jSTfH-move-right {
+		right: -12px;
+	}
+}
+
+@media screen and (max-width: 865px) {
+	.thumbnails-wrapper-container ul {
+		width: calc(90%);
+	}
+	._jSTfH-move-left {
+		left: -8px;
+	}   
+	._jSTfH-move-right {
+		right: -8px;
+	}
+}
+
+@media screen and (max-width: 768px) {
+		#small-thumbnails-move ul li a img {
+			width: 155px !important;
+			height: auto !important;
+	}
+}
+
+
+
+		</style>
