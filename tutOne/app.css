@@ -1,0 +1,15 @@
+.slider-container {
+    width: 400px; /* Set your desired width */
+    overflow: hidden;
+  }
+  
+  .slider {
+    display: flex;
+    transition: transform 0.3s ease;
+  }
+  
+  .slide {
+    min-width: 25%;
+    box-sizing: border-box;
+    /* Add styling for your slides here */
+  }

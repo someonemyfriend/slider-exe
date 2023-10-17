@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/app.css">
+
+    <title>Document</title>
+</head>
+<body>
+    <h1>Hello!</h1>
+
+    <div class="slider-container">
+        <div class="slider">
+          <div style="background-color: aqua;" class="slide">neshto1</div>
+          <div style="background-color: rgb(0, 68, 255);" class="slide">neshto2</div>
+          <div style="background-color: rgb(55, 0, 255);" class="slide">neshto3</div>
+          <div style="background-color: rgb(140, 0, 255);" class="slide">neshto4</div>
+          <div style="background-color: rgb(255, 0, 255);" class="slide">neshto5</div>
+          <div style="background-color: rgb(255, 0, 64);" class="slide">neshto6</div>
+          <div style="background-color: rgb(255, 145, 0);" class="slide">neshto7</div>
+          <div style="background-color: rgb(255, 217, 0);" class="slide">neshto8</div>
+          <div style="background-color: rgb(251, 255, 0);" class="slide">neshto9</div>
+          <div style="background-color: rgb(200, 255, 0);" class="slide">neshto10</div>
+          <div style="background-color: rgb(43, 255, 0);" class="slide">neshto11</div>
+          <div style="background-color: rgb(0, 255, 136);" class="slide">neshto12</div>
+          <div style="background-color: rgb(0, 255, 200);" class="slide">neshto13</div>
+          <div style="background-color: rgb(43, 255, 0);" class="slide">neshto14</div>
+        </div>
+    </div>
+
+    <button id="prevButton">Previous</button>
+    <button id="nextButton">Next</button>
+
+</body>
+
+<script> 
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const slider = document.querySelector('.slider');
+
+function showSlide(index) {
+  if (index < 0 || index >= slides.length) return;
+  currentSlide = index;
+  const offset = -currentSlide * (slides[0].offsetWidth); // Adjusted offset
+  slider.style.transform = `translateX(${offset}px)`;
+}
+
+function nextSlide() {
+  currentSlide = Math.min(currentSlide + 1, slides.length - 4);
+  showSlide(currentSlide);
+}
+
+function prevSlide() {
+  currentSlide = Math.max(currentSlide - 1, 0);
+  showSlide(currentSlide);
+}
+
+// Example usage:
+document.getElementById('nextButton').addEventListener('click', nextSlide);
+document.getElementById('prevButton').addEventListener('click', prevSlide);
+
+</script>
+</html>
